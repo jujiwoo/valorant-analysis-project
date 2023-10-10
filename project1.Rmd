@@ -1,0 +1,69 @@
+---
+title: "project1-justinsong"
+author: "Justin Song"
+date: "2023-09-18"
+output: html_document
+---
+
+```{r global_options, echo=FALSE}
+knitr::opts_chunk$set(fig.height=5, fig.width=10, warning=FALSE, tidy=TRUE, tidy.opts=list(width.cutoff=100))
+```
+
+```{r echo = FALSE}
+videogame = read.csv('Project1_videogames.csv')
+```
+
+## **Question 1**
+
+__Introduce your dataset and briefly describe the variables it contains, how it was collected, and any relevant background to give your reader context about the variables. Describe which variable is your chosen outcome and which predictors you will be investigating.  Include a picture (with citation) that relates to your analysis.__
+
+The videogame data set includes data derived from the article, "What makes a blockbuster video game? an empirical analysis of US sales data" by Joe Cox, including the variables Title, Publisher, Genre, Year, Rating, Console, MaxPlayers, AvgHoursToFinish, Sales, and Review Score. The outcome variable will be the Sales variable and the other 3 predictor variables will be MaxPlayers, AvgHoursToFinish, and Review Score.
+
+![](/users/justinsong/downloads/videogame.jpeg)
+
+## **Question 2**
+
+__Describe the distribution of your outcome variable, using the appropriate statistics, and include a univariate graph to display its distribution.__
+
+```{r echo = FALSE}
+library(ggplot2)
+ggplot(videogame, aes(Sales)) +  geom_histogram(binwidth = 0.5, col='black', fill='maroon') + xlab('Sales of Videogames (Million $)') + ylab('Frequency') + ggtitle('Distribution of Sales for Videogames') + theme_classic()
+```
+
+The minimum number of sales in the dataset of different videogames is `r min(videogame$Sales)`, while the maximum number of sales in the dataset is `r max(videogame$Sales)`. The mean value of sales is `r round(mean(videogame$Sales), 2)`, showing a graph that's skewed right with a high concentration of values on the left of the graph.
+
+## **Question 3**
+
+__For each of your three predictors, create a relevant graph that shows its relationship with your outcome variable.  Calculate any relevant bivariate statistics and briefly describe the relationships between each predictor and your outcome, referencing your graphs.__
+
+```{r echo = FALSE}
+videogame_ggplot = ggplot(videogame)
+videogame_ggplot + geom_point(aes(x=Sales, y=ReviewScore), color = 'skyblue') + labs(title='Correlation Between Number of Sales and Review Score', y='Review Score (Out of 100)')
+```
+
+The correlation coefficient between sales and the review scores is `r round(cor(videogame$Sales, videogame$ReviewScore), digits = 2)`. This value indicates a weak, but positive correlation between the two variables. As well as this, the value in general points towards the number of sales and review score being hardly related with a lack of association between the two variables. 
+
+```{r echo = FALSE}
+videogame_ggplot + geom_point(aes(x=Sales, y=AvgHoursToFinish), color = 'maroon') + labs(title='Correlation Between Number of Sales and Average Hours to Finish Game', y='Average Hours To Finish')
+```
+
+The correlation coefficient between sales and the review scores is `r round(cor(videogame$Sales, videogame$AvgHoursToFinish), digits = 2)`. This value indicates an extremely weak, but positive correlation between the two variables. As well as this, the value in general points towards the number of sales and review score being hardly related with a lack of association between the two variables.
+
+```{r echo = FALSE}
+videogame_ggplot + geom_histogram(aes(x=Sales), binwidth = 1, col='black',fill='pink')  + labs(title='Videogame Sales By Rating',x='Sales',y='Frequency') + theme(legend.position='bottom') + scale_fill_brewer(type='qual',palette=2) + facet_wrap(~Rating)
+```
+
+The mean value of sales in E rated video games is `r round(aggregate(Sales ~ Rating, data = videogame, FUN = mean)[1,2], digits =2)`. The mean value of sales in M rated games is `r round(aggregate(Sales ~ Rating, data = videogame, FUN = mean)[2,2], digits=2)`. The mean value of sales in T rated games is `r round(aggregate(Sales ~ Rating, data = videogame, FUN = mean)[3,2], digits=2)`. These values essentially indicate that M rated games have a lower average of sales in comparison to E and T rated videogames. 
+
+
+## **Question 4**
+
+__Write a conclusion that summarizes your findings and suggests areas for future research. Include all references for your report at the bottom.__
+
+In this analysis of the video game dataset, we investigated various factors influencing video game sales. The dataset included variables like title, publisher, genre, year, rating, console, max players, average hours to finish, sales, and review score. Our chosen outcome variable was "Sales," while predictor variables included "MaxPlayers," "AvgHoursToFinish," and "ReviewScore." The distribution of the sales variable showed a right-skewed pattern with a concentration of lower sales figures. Weak positive correlations were found between "Sales" and "Review Score" and "Sales" and "AvgHoursToFinish." Surprisingly, "M" rated games had lower average sales compared to "E" and "T" rated games. Future research opportunities utilizing this insight could bring forth analysis of trends based on different genre's and their appeal to different audiences, along with a consideration of the global market to gain a understanding of video game sales trends in general.
+
+## **Citations**
+
+Cox, J. (2023, July 26). What makes a blockbuster video game? an empirical analysis of US sales data. University of Portsmouth. https://researchportal.port.ac.uk/en/publications/what-makes-a-blockbuster-video-game-an-empirical-analysis-of-us-s 
+
+Studio, B. (n.d.). Game room linear icon. Gamepad. Video game controller. Recreation... iStock. https://www.istockphoto.com/vector/game-room-linear-icon-gamepad-video-game-controller-recreation-area-esports-gm1220072913-357102711 
